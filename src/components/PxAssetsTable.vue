@@ -3,10 +3,10 @@
     <thead>
       <tr class="bg-gray-100 border-b-2 border-gray-400">
         <th></th>
-        <th :class="{up: this.sortOrder == 1, down: this.sortOrder == -1}">
-          <span 
-          class="underline cursor-pointer"
-           @click="changeSortOrder">Ranking</span>
+        <th :class="{ up: this.sortOrder == 1, down: this.sortOrder == -1 }">
+          <span class="underline cursor-pointer" @click="changeSortOrder"
+            >Ranking</span
+          >
         </th>
         <th>Nombre</th>
         <th>Precio</th>
@@ -24,23 +24,44 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="a in filteredAssets" :key="a.id" class="border-b border-gray-200 hover:bg-gray-100 hover:bg-orange-100">
-        <td><img class="w-6 h-6" :src="`https://static.coincap.io/assets/icons/${a.symbol.toLowerCase()}@2x.png`" :alt="a.name"></td>
+      <tr
+        v-for="a in filteredAssets"
+        :key="a.id"
+        class="border-b border-gray-200 hover:bg-gray-100 hover:bg-orange-100"
+      >
         <td>
-          <b># {{a.rank}}</b>
+          <img
+            class="w-6 h-6 object-contain"
+            :src="
+              `https://static.coincap.io/assets/icons/${a.symbol.toLowerCase()}@2x.png`
+            "
+            :alt="a.name"
+          />
         </td>
         <td>
-          <router-link class=":hover:underline text-green-600" :to="{name: 'coin-detail', params: {id: a.id}}">
-          {{a.name}}
+          <b># {{ a.rank }}</b>
+        </td>
+        <td>
+          <router-link
+            class=":hover:underline text-green-600"
+            :to="{ name: 'coin-detail', params: { id: a.id } }"
+          >
+            {{ a.name }}
           </router-link>
           <small class="ml-1 text-gray-500">
-            {{a.symbol}}
+            {{ a.symbol }}
           </small>
         </td>
-        <td>{{a.priceUsd | dollar}}</td>
-        <td>{{a.marketCapUsd | dollar}}</td>
-        <td :class="a.changePercent24Hr.includes('-') ? 'text-red-600' : 'text-green-600'">
-          {{a.changePercent24Hr | percent}}
+        <td>{{ a.priceUsd | dollar }}</td>
+        <td>{{ a.marketCapUsd | dollar }}</td>
+        <td
+          :class="
+            a.changePercent24Hr.includes('-')
+              ? 'text-red-600'
+              : 'text-green-600'
+          "
+        >
+          {{ a.changePercent24Hr | percent }}
         </td>
         <td class="hidden sm:block">
           <px-button @custom-click="goToCoin(a.id)">
@@ -53,53 +74,54 @@
 </template>
 
 <script>
-import PxButton from '@/components/Pxbutton'
+import PxButton from "@/components/Pxbutton";
 export default {
   name: "PxAssetsTable",
 
-  components: {PxButton},
+  components: { PxButton },
 
-  data () {
+  data() {
     return {
-      filter: '',
-      sortOrder: 1
-    }
+      filter: "",
+      sortOrder: 1,
+    };
   },
 
   props: {
     assets: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
 
   computed: {
     filteredAssets() {
-      const altOrder = this.sortOrder == 1 ? -1 : 1
+      const altOrder = this.sortOrder == 1 ? -1 : 1;
 
-      return this.assets.filter(
-        a => 
-          a.symbol.toLowerCase().includes(this.filter.toLowerCase()) ||
-          a.name.toLowerCase().includes(this.filter.toLowerCase())
+      return this.assets
+        .filter(
+          (a) =>
+            a.symbol.toLowerCase().includes(this.filter.toLowerCase()) ||
+            a.name.toLowerCase().includes(this.filter.toLowerCase())
         )
         .sort((a, b) => {
           if (parseInt(a.rank) > parseInt(b.rank)) {
-            return this.sortOrder
+            return this.sortOrder;
           }
-          return altOrder
-        })
-    }
+          return altOrder;
+        });
+    },
   },
 
   methods: {
-    goToCoin (id) {
-      this.$router.push({name: 'coin-detail', params: {id}})
+    goToCoin(id) {
+      this.$router.push({ name: "coin-detail", params: { id } });
     },
 
-    changeSortOrder () {
-      this.sortOrder = this.sortOrder == 1 ? -1 : 1
-    }
-  }
+    changeSortOrder() {
+      this.sortOrder = this.sortOrder == 1 ? -1 : 1;
+    },
+  },
 };
 </script>
 
@@ -135,7 +157,7 @@ th {
   }
 }
 
-  img {
+img {
   height: 64px;
 }
 </style>
