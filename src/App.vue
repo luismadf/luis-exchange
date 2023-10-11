@@ -1,45 +1,40 @@
 <template>
   <main>
-    <px-header :links="links" />
-    <router-view class="container px-5 sm:px-20 py-20 flex justify-center" />
+    <Navbar :links="getLinks" />
+    <router-view
+      class="container px-5 sm:px-20 py-20 flex justify-center"
+      :isLoading="isLoading"
+      :assets="assets"
+    />
   </main>
 </template>
 
 <script>
-import PxHeader from "@/components/PxHeader";
+import api from "@/api";
+import Navbar from "@/components/Navbar";
+import { getMenuItems } from "@/helpers";
 
 export default {
   name: "app",
-  components: { PxHeader },
+  components: { Navbar },
 
   data() {
     return {
-      links: [
-        {
-          title: "BTC",
-          to: { name: "coin-detail", params: { id: "bitcoin" } },
-        },
-        {
-          title: "ETH",
-          to: { name: "coin-detail", params: { id: "ethereum" } },
-        },
-        {
-          title: "XRP",
-          to: { name: "coin-detail", params: { id: "ripple" } },
-        },
-      ],
+      isLoading: true,
+      assets: [],
     };
+  },
+  created() {
+    (this.isLoading = true),
+      api
+        .getAssets()
+        .then((assets) => (this.assets = assets))
+        .finally(() => (this.isLoading = false));
+  },
+  computed: {
+    getLinks() {
+      return getMenuItems(this.assets);
+    },
   },
 };
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
