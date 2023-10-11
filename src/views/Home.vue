@@ -1,31 +1,29 @@
 <template>
-    <div>
-        <bounce-loader :loading="isLoading" :color="'#68d391'" :size="100" />
-        <px-assets-table v-if="!isLoading" :assets="assets" />
-    </div>
+  <div>
+    <bounce-loader :loading="isLoading" :color="'#68d391'" :size="100" />
+    <px-assets-table v-if="!isLoading" :assets="assets" />
+  </div>
 </template>
 
 <script>
-import api from '@/api'
 import PxAssetsTable from "@/components/PxAssetsTable";
 
 export default {
-    name: 'Home',
+  name: "Home",
 
-    components: {PxAssetsTable},
+  components: { PxAssetsTable },
 
-    data () {
-        return {
-            isLoading: false,
-            assets: []
-        }
+  props: {
+    assets: {
+      type: Array,
+      required: true,
+      default: () => [],
     },
-
-    created () {
-        this.isLoading = true,
-        api.getAssets()
-        .then(assets => (this.assets = assets))
-        .finally(() => this.isLoading = false)
-    }
-}
+    isLoading: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
+  },
+};
 </script>
